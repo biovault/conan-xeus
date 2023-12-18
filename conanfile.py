@@ -137,13 +137,13 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
         # Build both release and debug for dual packaging
         cmake_debug = self._configure_cmake()
         try:
-            cmake_debug.build(build_type="Debug")
+            cmake_debug.build()
         except ConanException as e:
-            print(f"Exception: {e} from cmake invocation: \n Completing dbg build")
+            print(f"Exception: {e} from cmake invocation: \n Completing build")
         try:
-            cmake_debug.install(build_type="Debug")
+            cmake_debug.install()
         except ConanException as e:
-            print(f"Exception: {e} from cmake invocation: \n Completing dbg install")
+            print(f"Exception: {e} from cmake invocation: \n Completing  install")
 
     # Package has no build type marking
     def package_id(self):
