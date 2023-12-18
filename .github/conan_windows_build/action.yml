@@ -78,6 +78,7 @@ runs:
 
     - name: Build + Upload Release to artifactory with conan
       run: |
+        conan profile list
         conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Release
         $env:CONAN_USER_HOME = (Get-Location).tostring() + '\_conan'
         $package_name = (conan inspect --raw name conanfile.py)
@@ -91,6 +92,7 @@ runs:
 
     - name: Build + Upload Debug to artifactory with conan
       run: |
+        conan profile list
         conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Debug
         $env:CONAN_USER_HOME = (Get-Location).tostring() + '\_conan'
         $package_name = (conan inspect --raw name conanfile.py)
