@@ -80,6 +80,7 @@ runs:
       env:
         BUILD_SHARED: True
         CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
+        CONAN_UPLOAD: https://lkeb-artifactory.lumc.nl/artifactory/api/conan/conan-local
         CC: ${{inputs.conan-cc}}
         CXX: ${{inputs.conan-cxx}}
 
