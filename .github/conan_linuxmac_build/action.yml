@@ -105,7 +105,7 @@ runs:
       env:
         CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
 
-    - name: Build Debug to artifactory with conan
+    - name: Build Debug
       run: |
         export CONAN_USER_HOME=`pwd`/_conan
         echo All profiles:
@@ -118,7 +118,7 @@ runs:
       env:
         CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
 
-    - name: Upload Debug to artifactory with conan
+    - name: Upload Debug
       run: |
         export CONAN_USER_HOME=`pwd`/_conan
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
