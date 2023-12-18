@@ -68,6 +68,7 @@ runs:
         conan profile update settings.os_build=${{ inputs.conan-build-os }} action_build
         conan profile update settings.arch=x86_64 action_build
         conan profile update settings.arch_build=x86_64 action_build
+        conan profile update settings.build_type=Release action_build
         conan profile update settings.compiler=${{ inputs.conan-compiler }} action_build
         conan profile update settings.compiler.version=${{ inputs.conan-compiler-version }} action_build
         conan profile update settings.compiler.libcxx=${{ inputs.conan-libcxx-version}} action_build
@@ -91,7 +92,7 @@ runs:
         conan profile list
         echo All Re
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
-        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Release
+        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build
       shell: bash
 
     - name: Upload Release
@@ -109,9 +110,10 @@ runs:
         export CONAN_USER_HOME=`pwd`/_conan
         echo All profiles:
         conan profile list
+        conan profile update settings.build_type=Debug action_build
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
         export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
-        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Debug
+        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build
       shell: bash
       env:
         CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
