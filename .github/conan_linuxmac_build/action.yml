@@ -91,7 +91,6 @@ runs:
         conan profile list
         echo All Re
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
-        export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
         conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Release
       shell: bash
 
@@ -99,6 +98,7 @@ runs:
       run: |
         export CONAN_USER_HOME=`pwd`/_conan
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
+        export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
         conan upload --all --force --confirm -r $CONAN_LKEB_ARTIFACTORY $CONAN_PACKAGE_NAME/*
       shell: bash
       env:
@@ -120,6 +120,7 @@ runs:
       run: |
         export CONAN_USER_HOME=`pwd`/_conan
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
+        export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
         conan upload --all --force --confirm -r $CONAN_LKEB_ARTIFACTORY $CONAN_PACKAGE_NAME/*
 
       shell: bash
