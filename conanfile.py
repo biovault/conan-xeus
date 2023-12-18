@@ -146,10 +146,10 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
             print(f"Exception: {e} from cmake invocation: \n Completing  install")
 
     # Package has no build type marking
-    def package_id(self):
-        del self.info.settings.build_type
-        if self.settings.compiler == "Visual Studio":
-            del self.info.settings.compiler.runtime
+    #def package_id(self):
+    #    del self.info.settings.build_type
+    #    if self.settings.compiler == "Visual Studio":
+    #        del self.info.settings.compiler.runtime
 
     # Package contains its own cmake config file
     def package_info(self):
