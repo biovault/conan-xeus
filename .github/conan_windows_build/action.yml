@@ -50,7 +50,7 @@ runs:
         echo "Completed setup for package: %CONAN_PACKAGE_NAME%"
       shell: cmd
 
-    - name: Build with conan
+    - name: Setup conan
       run: |
         for /f "delims=" %%i in ('where cmake') do set CONAN_CMAKE_PROGRAM="%%i"
         set CONAN_USER_HOME=%cd%\_conan
@@ -69,19 +69,29 @@ runs:
         conan profile update settings.compiler.version=${{ inputs.conan-visual-version }} action_build
         conan profile show action_build
 
-        nuget install OpenBLAS -Version 0.2.14.1 -OutputDirectory %TEMP%
-        set BLAS_ROOT=%TEMP%\OpenBLAS.0.2.14.1\lib\native
-
-        conan create . faiss/1.7.3@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Release
-
       shell: cmd
       env:
         BUILD_SHARED: True
         CONAN_UPLOAD: https://lkeb-artifactory.lumc.nl/artifactory/api/conan/conan-local
         CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
 
-    - name: Upload to artifactory with conan
+
+    - name: Build + Upload Release to artifactory with conan
       run: |
+        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Release
+        $env:CONAN_USER_HOME = (Get-Location).tostring() + '\_conan'
+        $package_name = (conan inspect --raw name conanfile.py)
+        $package_ref = $package_name + '/*'
+        echo "Uploading $package_ref  to the Artifactory"
+        conan upload --all --force --confirm -r $Env:CONAN_LKEB_ARTIFACTORY $package_ref
+
+      shell: pwsh
+      env:
+        CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
+
+    - name: Build + Upload Debug to artifactory with conan
+      run: |
+        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Debug
         $env:CONAN_USER_HOME = (Get-Location).tostring() + '\_conan'
         $package_name = (conan inspect --raw name conanfile.py)
         $package_ref = $package_name + '/*'
