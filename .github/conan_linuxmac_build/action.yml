@@ -61,9 +61,7 @@ runs:
         export CONAN_USER_HOME=`pwd`/_conan
         echo Add LKEB artifactory as remote
         conan remote add $CONAN_LKEB_ARTIFACTORY $CONAN_UPLOAD
-        echo Add upload user
         conan user -r $CONAN_LKEB_ARTIFACTORY -p ${{ inputs.conan-password }} ${{ inputs.conan-user }}
-        export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
 
         conan profile new action_build
         conan profile update settings.os=${{ inputs.conan-build-os }} action_build
@@ -81,22 +79,20 @@ runs:
       shell: bash
       env:
         BUILD_SHARED: True
-        CONAN_UPLOAD: https://lkeb-artifactory.lumc.nl/artifactory/api/conan/conan-local
         CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
         CC: ${{inputs.conan-cc}}
         CXX: ${{inputs.conan-cxx}}
 
     - name: Build Release to artifactory with conan
       run: |
-        conan user -r $CONAN_LKEB_ARTIFACTORY -p ${{ inputs.conan-password }} ${{ inputs.conan-user }}
+        export CONAN_USER_HOME=`pwd`/_conan
         echo All profiles:
         conan profile list
+        echo All Re
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
         export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
         conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Release
       shell: bash
-      env:
-        CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
 
     - name: Upload Release
       run: |
@@ -109,7 +105,7 @@ runs:
 
     - name: Build Debug to artifactory with conan
       run: |
-        conan user -r $CONAN_LKEB_ARTIFACTORY -p ${{ inputs.conan-password }} ${{ inputs.conan-user }}
+        export CONAN_USER_HOME=`pwd`/_conan
         echo All profiles:
         conan profile list
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
