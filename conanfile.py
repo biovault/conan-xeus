@@ -157,7 +157,8 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
         self.cpp_info.set_property("cmake_config_file", True)
 
     def _pkg_bin(self, build_type):
-        src_dir = f"{self.build_folder}/lib/{build_type}"
+        print(f"Packaging artifacts for build type: {build_type}")
+        src_dir = f"{self.build_folder}/{build_type}"
         dst_lib = f"lib/{build_type}"
         dst_bin = f"bin/{build_type}"
 
@@ -169,6 +170,7 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
             self.settings.compiler == "Visual Studio"
         ):
             # the debug info
+            print("Adding pdb files for Windows debug")
             self.copy("*.pdb", src=src_dir, dst=dst_lib, keep_path=False)
 
     def package(self):
@@ -181,9 +183,4 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
         self.copy("*.h", src="xeus/src/cpp", dst="include", keep_path=True)
         self.copy("*.hpp", src="xeus/src/cpp", dst="include", keep_path=True)
 
-        # Debug
-        self._pkg_bin("Debug")
-        # Release
-        self._pkg_bin("Release")
-        # RelWithDebInfo
-        self._pkg_bin("RelWithDebInfo")
+        self._pkg_bin(self.settings.build_type)
