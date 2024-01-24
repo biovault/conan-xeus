@@ -11,6 +11,8 @@ required_conan_version = ">=1.60.0"
 
 
 class XeusConan(ConanFile):
+    python_requires = "bundleutils/0.1@lkeb/stable"
+    python_requires_extend = "bundleutils.BundleUtils"
     name = "xeus"
     version = "3.1.4"
     license = "MIT"
@@ -20,14 +22,19 @@ class XeusConan(ConanFile):
     the implementation of kernels for Jupyter"""
     topics = ("python", "jupyter")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "testing": [True, False]}
-    default_options = {"shared": True, "testing": False}
+    options = {"shared": [True, False], "testing": [True, False], 'merge_package': [True, False]}
+    default_options = {"shared": True, "testing": False, 'merge_package': False}
     generators = "CMakeDeps"
     exports = "cmake/*"
     requires = (
         "nlohmann_json/3.11.3",
         "xtl/0.7.5"
     )
+
+    def init(self):
+        # use the buntilutils to record the 
+        # original source directory
+        self._save_git_path()
 
     def source(self):
         try:
@@ -133,23 +140,17 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
         return cmake
 
     def build(self):
-        
+        self._save_package_id()
         # Build both release and debug for dual packaging
-        cmake_debug = self._configure_cmake()
+        cmake = self._configure_cmake()
         try:
-            cmake_debug.build()
+            cmake.build()
         except ConanException as e:
-            print(f"Exception: {e} from cmake invocation: \n Completing build")
+            print(f"Exception: {e} from cmake Debug invocation: \n Completing build")
         try:
-            cmake_debug.install()
+            cmake.install()
         except ConanException as e:
-            print(f"Exception: {e} from cmake invocation: \n Completing  install")
-
-    # Package has no build type marking
-    #def package_id(self):
-    #    del self.info.settings.build_type
-    #    if self.settings.compiler == "Visual Studio":
-    #        del self.info.settings.compiler.runtime
+            print(f"Exception: {e} from cmake Debug invocation: \n Completing  install")
 
     # Package contains its own cmake config file
     def package_info(self):
@@ -176,6 +177,7 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
     def package(self):
         # cleanup excess installs - this is a kludge TODO fix cmake
         print("cleanup")
+        print(f"Package folder: {self.package_folder}")
         for child in Path(self.package_folder, "lib").iterdir():
             if child.is_file():
                 child.unlink()
@@ -184,3 +186,5 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
         self.copy("*.hpp", src="xeus/src/cpp", dst="include", keep_path=True)
 
         self._pkg_bin(self.settings.build_type)
+        # This allow the merging op multiple build_types into a single package
+        self._merge_packages()

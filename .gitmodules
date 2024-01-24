@@ -1,0 +1,3 @@
+[submodule "external/conan-recipes"]
+	path = external/conan-recipes
+	url = git@github.com:biovault/conan-recipes.git

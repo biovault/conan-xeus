@@ -85,14 +85,14 @@ runs:
         CC: ${{inputs.conan-cc}}
         CXX: ${{inputs.conan-cxx}}
 
-    - name: Build Release to artifactory with conan
+    - name: Build Combined Debug & Release
       run: |
         export CONAN_USER_HOME=`pwd`/_conan
         echo All profiles:
         conan profile list
-        echo All Re
-        export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
+        conan export ./external/conan-recipes/bundle_package bundleutils/0.1@lkeb/stable
         conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build
+        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Debug -o merge_package=True
       shell: bash
 
     - name: Upload Release
@@ -100,31 +100,10 @@ runs:
         export CONAN_USER_HOME=`pwd`/_conan
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
         export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
-        conan upload --all --force --confirm -r $CONAN_LKEB_ARTIFACTORY $CONAN_PACKAGE_NAME/*
+        release_pkgid = `cat ./Release_id.txt`
+        $release_pkgid = "xeus/3.1.4@lkeb/stable/stable:" + $release_pkgid
+        conan upload --all --force --confirm -r $CONAN_LKEB_ARTIFACTORY $release_pkgid
       shell: bash
       env:
         CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
 
-    - name: Build Debug
-      run: |
-        export CONAN_USER_HOME=`pwd`/_conan
-        echo All profiles:
-        conan profile list
-        conan profile update settings.build_type=Debug action_build
-        export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
-        export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
-        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build
-      shell: bash
-      env:
-        CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
-
-    - name: Upload Debug
-      run: |
-        export CONAN_USER_HOME=`pwd`/_conan
-        export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
-        export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
-        conan upload --all --force --confirm -r $CONAN_LKEB_ARTIFACTORY $CONAN_PACKAGE_NAME/*
-
-      shell: bash
-      env:
-        CONAN_LKEB_ARTIFACTORY: lkeb-artifactory
