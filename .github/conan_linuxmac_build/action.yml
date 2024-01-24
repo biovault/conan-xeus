@@ -101,7 +101,7 @@ runs:
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
         export CONAN_PACKAGE_NAME=`conan inspect --raw name conanfile.py`
         release_pkgid=`cat ./Release_id.txt`
-        $release_pkgid = "xeus/3.1.4@lkeb/stable/stable:${release_pkgid}"
+        release_pkgid="xeus/3.1.4@lkeb/stable/stable:${release_pkgid}"
         conan upload --all --force --confirm -r $CONAN_LKEB_ARTIFACTORY $release_pkgid
       shell: bash
       env:
