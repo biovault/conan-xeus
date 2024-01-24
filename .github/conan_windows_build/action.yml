@@ -84,7 +84,7 @@ runs:
         conan profile list
         conan export ./external/conan-recipes/bundle_package bundleutils/0.1@lkeb/stable
         conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build
-        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s build_type=Debug -o merge_package=True
+        conan create . xeus/3.1.4@lkeb/stable -pr:h action_build -pr:b action_build -s:b build_type=Debug -s:h build_type=Debug -o merge_package=True
 
       shell: pwsh
       env:
