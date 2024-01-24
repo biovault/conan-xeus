@@ -37,7 +37,7 @@ jobs:
           - name: Linux_gcc10
             os: ubuntu-20.04
             build-compiler: gcc
-            build-cversion: 10
+            build-cversion: 11
             build-config: Release
             build-os: Linux
             build-libcxx: libstdc++
