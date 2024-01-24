@@ -94,7 +94,7 @@ runs:
         $env:CONAN_USER_HOME = (Get-Location).tostring() + '\_conan'
         echo "Uploading $package_ref  to the Artifactory"
         $release_pkgid = Get-Content '.\Release_id.txt'
-        $release_pkgid = "xeus-zmq/1.1.1@lkeb/stable:" + $release_pkgid
+        $release_pkgid = "xeus/3.1.4/1.1.1@lkeb/stable:" + $release_pkgid
         conan upload --all --force --confirm -r $Env:CONAN_LKEB_ARTIFACTORY $release_pkgid
       shell: pwsh
       env:
