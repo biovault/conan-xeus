@@ -27,29 +27,29 @@ jobs:
       matrix:
         include:
 
-          - name: Windows-msvc2019
-            os: windows-2019
-            compiler: msvc-2019
-            build-cversion: 16
-            build-runtime: MD
-            build-config: Release
-
-          - name: Linux_gcc11
-            os: ubuntu-20.04
-            build-compiler: gcc
-            build-cversion: 11
-            build-config: Release
-            build-os: Linux
-            build-libcxx: libstdc++
-
-          # - name: Macos_xcode13.4
-          #   os: macOS-12
-          #   build-compiler: apple-clang
-          #   build-cversion: 13
+          # - name: Windows-msvc2019
+          #   os: windows-2019
+          #   compiler: msvc-2019
+          #   build-cversion: 16
+          #   build-runtime: MD
           #   build-config: Release
-          #   build-os: Macos
-          #   build-xcode-version: 13.4
-          #   build-libcxx: libc++
+
+          # - name: Linux_gcc11
+          #   os: ubuntu-20.04
+          #   build-compiler: gcc
+          #   build-cversion: 11
+          #   build-config: Release
+          #   build-os: Linux
+          #   build-libcxx: libstdc++
+
+          - name: Macos_xcode13.4
+            os: macOS-12
+            build-compiler: apple-clang
+            build-cversion: 13
+            build-config: Release
+            build-os: Macos
+            build-xcode-version: 13.4
+            build-libcxx: libc++
 
 
     steps:
