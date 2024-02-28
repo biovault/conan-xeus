@@ -58,7 +58,9 @@ class XeusConan(ConanFile):
         tools.replace_in_file(configinpath, "include(\"${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake\")", "include(\"${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake\")")
         ## Add post build install command to support packaging
         install_text = """
-add_custom_command(TARGET ${xeus_targets} POST_BUILD
+add_dependencies(xeus-static xeus)
+
+add_custom_command(TARGET xeus-static POST_BUILD
     COMMAND "${CMAKE_COMMAND}"
     --install ${CMAKE_CURRENT_BINARY_DIR}
     --config $<CONFIGURATION>
