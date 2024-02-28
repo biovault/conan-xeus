@@ -56,7 +56,18 @@ class XeusConan(ConanFile):
         configinpath = os.path.join(self.source_folder, "xeus", "xeusConfig.cmake.in")
         ## Fixe the targets file name to match the above change
         tools.replace_in_file(configinpath, "include(\"${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake\")", "include(\"${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake\")")
+        ## Add post build install command to support packaging
+        install_text = """
+add_custom_command(TARGET ${xeus_targets} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}"
+    --install ${CMAKE_CURRENT_BINARY_DIR}
+    --config $<CONFIGURATION>
+    --prefix ${MV_INSTALL_DIR}/$<CONFIGURATION>
+)
 
+"""
+        with open(cmakepath, "a") as cmakefile:
+            cmakefile.write(install_text)
 
         os.chdir("..")
 
@@ -143,14 +154,12 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
         self._save_package_id()
         # Build both release and debug for dual packaging
         cmake = self._configure_cmake()
-        try:
-            cmake.build()
-        except ConanException as e:
-            print(f"Exception: {e} from cmake Debug invocation: \n Completing build")
-        try:
-            cmake.install()
-        except ConanException as e:
-            print(f"Exception: {e} from cmake Debug invocation: \n Completing  install")
+
+        cmake.build(build_type="Debug")
+        cmake.install(build_type="Debug")
+
+        cmake.build(build_type="Release")
+        cmake.install(build_type="Release")
 
     # Package contains its own cmake config file
     def package_info(self):
