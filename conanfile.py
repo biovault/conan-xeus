@@ -62,7 +62,7 @@ add_custom_command(TARGET ${xeus_targets} POST_BUILD
     COMMAND "${CMAKE_COMMAND}"
     --install ${CMAKE_CURRENT_BINARY_DIR}
     --config $<CONFIGURATION>
-    --prefix ${MV_INSTALL_DIR}/$<CONFIGURATION>
+    --prefix ${CMAKE_CURRENT_BINARY_DIR}/install/$<CONFIGURATION>
 )
 
 """
