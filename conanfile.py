@@ -22,8 +22,8 @@ class XeusConan(ConanFile):
     the implementation of kernels for Jupyter"""
     topics = ("python", "jupyter")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "testing": [True, False], 'merge_package': [True, False]}
-    default_options = {"shared": True, "testing": False, 'merge_package': False}
+    options = {"shared": [True, False], "testing": [True, False]}
+    default_options = {"shared": True, "testing": False}
     generators = "CMakeDeps"
     exports = "cmake/*"
     requires = (
@@ -195,5 +195,3 @@ include_directories({Path(self.deps_cpp_info['xtl'].rootpath, 'include').as_posi
         self.copy("*.hpp", src="xeus/src/cpp", dst="include", keep_path=True)
 
         self._pkg_bin(self.settings.build_type)
-        # This allow the merging op multiple build_types into a single package
-        self._merge_packages()
